@@ -1,6 +1,7 @@
 package com.example.currencyviewer.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.example.currencyviewer.Network.HttpPostAsyncTask;
 import com.example.currencyviewer.Network.RequestUrls;
 import com.example.currencyviewer.R;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -224,39 +226,58 @@ public class HalykFragment extends Fragment implements ResponseHttpAsyncTask {
     @Override
     public void afterFinishingHttpPostAsyncTask(String response) throws JSONException {
         JSONObject responseData = new JSONObject(response);
+        String dateTitle = "";
 
         if (responseData.getString("result").equals("true")) {
-            JSONObject currencyHistory = responseData.getJSONObject("data").getJSONObject("currencyHistory");
+            try {
+                JSONObject currencyHistory = responseData.getJSONObject("data").getJSONObject("currencyHistory");
 
-            int i = 0;
-            while (true) {
-                try {
-                    if (!currencyHistory.getString(i+"").equals("")) break;
-                } catch (Exception e) {
-                    i++;
+                int i = 0;
+                while (true) {
+                    try {
+                        if (!currencyHistory.getString(i + "").equals("")) break;
+                    } catch (Exception e) {
+                        i++;
+                    }
                 }
-            }
-            String date = currencyHistory.getJSONObject(i+"").getString("date");
-            String dateTitle = currencyHistory.getJSONObject(i+"").getString("dateTitle");
-            privatePersonsObject = currencyHistory.getJSONObject(i+"").getJSONObject("privatePersons");
-            legalPersonsObject = currencyHistory.getJSONObject(i+"").getJSONObject("legalPersons");
-            crossCourseObject = currencyHistory.getJSONObject(i+"").getJSONObject("crossCourses");
-            cardsObject = currencyHistory.getJSONObject(i+"").getJSONObject("cards");
+                String date = currencyHistory.getJSONObject(i + "").getString("date");
+                dateTitle = currencyHistory.getJSONObject(i + "").getString("dateTitle");
+                privatePersonsObject = currencyHistory.getJSONObject(i + "").getJSONObject("privatePersons");
+                legalPersonsObject = currencyHistory.getJSONObject(i + "").getJSONObject("legalPersons");
+                crossCourseObject = currencyHistory.getJSONObject(i + "").getJSONObject("crossCourses");
+                cardsObject = currencyHistory.getJSONObject(i + "").getJSONObject("cards");
 
-            i++;
-            while (true) {
-                try {
-                    if (!currencyHistory.getString(i+"").equals("")) break;
-                } catch (Exception e) {
-                    i++;
+                i++;
+                while (true) {
+                    try {
+                        if (!currencyHistory.getString(i + "").equals("")) break;
+                    } catch (Exception e) {
+                        i++;
+                    }
                 }
+                String date2 = currencyHistory.getJSONObject(i + "").getString("date");
+                String dateTitle2 = currencyHistory.getJSONObject(i + "").getString("dateTitle");
+                JSONObject privatePersons2 = currencyHistory.getJSONObject(i + "").getJSONObject("privatePersons");
+                JSONObject legalPersons2 = currencyHistory.getJSONObject(i + "").getJSONObject("legalPersons");
+                JSONObject crossCourses2 = currencyHistory.getJSONObject(i + "").getJSONObject("crossCourses");
+                JSONObject cards2 = currencyHistory.getJSONObject(i + "").getJSONObject("cards");
+            } catch (JSONException e) {
+                JSONArray currencyHistory = responseData.getJSONObject("data").getJSONArray("currencyHistory");
+
+                String date = currencyHistory.getJSONObject(0).getString("date");
+                dateTitle = currencyHistory.getJSONObject(0).getString("dateTitle");
+                privatePersonsObject = currencyHistory.getJSONObject(0).getJSONObject("privatePersons");
+                legalPersonsObject = currencyHistory.getJSONObject(0).getJSONObject("legalPersons");
+                crossCourseObject = currencyHistory.getJSONObject(0).getJSONObject("crossCourses");
+                cardsObject = currencyHistory.getJSONObject(0).getJSONObject("cards");
+
+                String date2 = currencyHistory.getJSONObject(1).getString("date");
+                String dateTitle2 = currencyHistory.getJSONObject(1).getString("dateTitle");
+                JSONObject privatePersons2 = currencyHistory.getJSONObject(1).getJSONObject("privatePersons");
+                JSONObject legalPersons2 = currencyHistory.getJSONObject(1).getJSONObject("legalPersons");
+                JSONObject crossCourses2 = currencyHistory.getJSONObject(1).getJSONObject("crossCourses");
+                JSONObject cards2 = currencyHistory.getJSONObject(1).getJSONObject("cards");
             }
-            String date2 = currencyHistory.getJSONObject(i+"").getString("date");
-            String dateTitle2 = currencyHistory.getJSONObject(i+"").getString("dateTitle");
-            JSONObject privatePersons2 = currencyHistory.getJSONObject(i+"").getJSONObject("privatePersons");
-            JSONObject legalPersons2 = currencyHistory.getJSONObject(i+"").getJSONObject("legalPersons");
-            JSONObject crossCourses2 = currencyHistory.getJSONObject(i+"").getJSONObject("crossCourses");
-            JSONObject cards2 = currencyHistory.getJSONObject(i+"").getJSONObject("cards");
 
             dateTextView.setText(dateTitle);
 
